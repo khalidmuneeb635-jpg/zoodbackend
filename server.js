@@ -2,6 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors"); // New package we will install
 const app = express();
+app.use(
+  cors({
+    origin: "*", // Allow ALL connections (Easiest for now)
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 const PORT = process.env.PORT || 5000;
 
 // Middleware
