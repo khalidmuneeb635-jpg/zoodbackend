@@ -27,6 +27,10 @@ const StudentSchema = new mongoose.Schema({
   fees: Number,
 });
 const Student = mongoose.model("Student", StudentSchema);
+// Default Home Route
+app.get("/", (req, res) => {
+  res.send("ZoodSolutions Backend is Running! 🚀");
+});
 
 // --- ROUTES ---
 
@@ -49,3 +53,4 @@ app.get("/api/students", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+module.exports = app;
