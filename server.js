@@ -58,6 +58,15 @@ app.get("/api/students", async (req, res) => {
   const students = await Student.find();
   res.json(students);
 });
-
+// DELETE Route: Remove a student by ID
+app.delete("/api/students/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Student.findByIdAndDelete(id);
+    res.json({ message: "Student deleted successfully!" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete" });
+  }
+});
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 module.exports = app;
