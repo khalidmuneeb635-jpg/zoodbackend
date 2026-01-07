@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZoodInstitute Cloud Manager</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+        background-color: #f4f4f9;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+
+      /* Form Styling */
+      input,
+      button {
+        padding: 10px;
+        margin: 5px 0;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      /* List Styling */
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        background: #ecf0f1;
+        margin: 5px 0;
+        padding: 10px;
+        border-left: 5px solid #2ecc71;
+        display: flex;
+        justify-content: space-between;
+      }
+      span {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>🎓 New Admission</h2>
+      <input type="text" id="name" placeholder="Student Name" />
+      <input type="text" id="rollNo" placeholder="Roll Number" />
+      <input type="text" id="course" placeholder="Course" />
+      <input type="number" id="fees" placeholder="Fees Paid" />
+      <button onclick="addStudent()">Submit Admission</button>
+
+      <h2>📋 Enrolled Students (From Cloud)</h2>
+      <ul id="studentList">
+        <li>Loading data...</li>
+      </ul>
+    </div>
+
+    <script>
+      const API_URL = "http://localhost:5000/api/students";
+
+      // 1. READ: Fetch students when page loads
+      async function loadStudents() {
+        const response = await fetch(API_URL);
+        const students = await response.json();
+
+        const list = document.getElementById("studentList");
+        list.innerHTML = ""; // Clear list
+
+        students.forEach((student) => {
+          const item = document.createElement("li");
+          item.innerHTML = `
+                <span>${student.name} (${student.rollNo})</span>
+                <small>${student.course} - Rs. ${student.fees}</small>
+            `;
+          list.appendChild(item);
+        });
+      }
+
+      // 2. CREATE: Send new student to server
+      async function addStudent() {
+        const name = document.getElementById("name").value;
+        const rollNo = document.getElementById("rollNo").value;
+        const course = document.getElementById("course").value;
+        const fees = document.getElementById("fees").value;
+
+        await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, rollNo, course, fees }),
+        });
+
+        // Refresh the list immediately
+        loadStudents();
+        alert("Student Admitted Successfully!");
+      }
+
+      // Load data initially
+      loadStudents();
+    </script>
+  </body>
+</html>
